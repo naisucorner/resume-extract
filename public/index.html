@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Document</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body>
+    <div class="flex justify-center w-full">
+      <div class="container flex flex-col justify-center">
+        <div class="flex justify-center mt-5">
+          <input type="file" id="inpFile" class="w-fit" />
+
+          <button
+            type="button"
+            id="btnUpload"
+            class="px-4 py-1 border border-gray-400 rounded-md"
+          >
+            Upload
+          </button>
+        </div>
+
+        <br />
+        <br />
+
+        <textarea
+          id="resultText"
+          placeholder="Your PDF text will appear here..."
+          class="w-full border border-gray-400 h-[500px] px-4 py-2"
+        ></textarea>
+      </div>
+    </div>
+
+    <script>
+      const inpFile = document.getElementById("inpFile");
+      const btnUpload = document.getElementById("btnUpload");
+      const resultText = document.getElementById("resultText");
+
+      btnUpload.addEventListener("click", () => {
+        const formData = new FormData();
+
+        formData.append("pdfFile", inpFile.files[0]);
+
+        console.log({ formData });
+
+        fetch("/extract-text", {
+          method: "post",
+          body: formData,
+        })
+          .then((response) => {
+            return response.text();
+          })
+          .then((extractedText) => {
+            resultText.value = extractedText.trim();
+          });
+      });
+    </script>
+  </body>
+</html>
